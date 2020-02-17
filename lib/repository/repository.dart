@@ -7,9 +7,10 @@ import 'package:dio/dio.dart';
 import 'package:movie_app/model/genre_response.dart';
 import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/model/personal_response.dart';
+import 'package:movie_app/model/video_response.dart';
 
 class MovieRepository {
-  final String apiKey = "TMDB API KEY HERE";
+  final String apiKey = "a0fda8414a6b4a0f3c552beeea551858";
   static String mainUrl = "https://api.themoviedb.org/3";
   final Dio _dio = Dio();
   var getPopularUrl = '$mainUrl/movie/top_rated';
@@ -17,9 +18,14 @@ class MovieRepository {
   var getPlayingUrl = '$mainUrl/movie/now_playing';
   var getGenresUrl = "$mainUrl/genre/movie/list";
   var getPersonsUrl = "$mainUrl/trending/person/week";
+  var getMovieVideoUrl = "$mainUrl/movie/";
 
-  Future<MovieResponse> getMovies() async {
-    var params = {"api_key": apiKey, "language": "en_US", "page": 1};
+  Future<MovieResponse> getMovies(int page) async {
+    var params = {
+      "api_key": apiKey,
+      "language": "en_US",
+      "page": page == null ? 1 : page
+    };
     try {
       Response response =
           await _dio.get(getPopularUrl, queryParameters: params);
@@ -27,6 +33,21 @@ class MovieRepository {
     } catch (error, stackTrace) {
       print("Exception occured: $error stackTrace: $stackTrace");
       return MovieResponse.withError("$error");
+    }
+  }
+
+  Future<VideoResponse> getVideos(int movieId) async {
+    var params = {
+      "api_key": apiKey,
+      "language": "en_US",
+    };
+    try {
+      Response response = await _dio.get(getMovieVideoUrl + "$movieId+/videos",
+          queryParameters: params);
+      return VideoResponse.fromJson(response.data);
+    } catch (error, stackTrace) {
+      print("Exception occured: $error stackTrace: $stackTrace");
+      return VideoResponse.withError("$error");
     }
   }
 

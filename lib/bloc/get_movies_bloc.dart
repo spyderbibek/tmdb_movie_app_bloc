@@ -12,8 +12,8 @@ class MoviesListBloc {
   final BehaviorSubject<MovieResponse> _subject =
       BehaviorSubject<MovieResponse>();
 
-  getMovies() async {
-    MovieResponse response = await _repository.getMovies();
+  getMovies(int page) async {
+    MovieResponse response = await _repository.getMovies(page);
     _subject.sink.add(response);
   }
 

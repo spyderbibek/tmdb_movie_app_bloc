@@ -8,6 +8,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/bloc/get_movies_bloc.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/screens/top_rated_movies_all.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class TopMovies extends StatefulWidget {
@@ -20,7 +21,7 @@ class _TopMoviesState extends State<TopMovies> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    moviesBloc..getMovies();
+    moviesBloc..getMovies(1);
   }
 
   @override
@@ -28,15 +29,38 @@ class _TopMoviesState extends State<TopMovies> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 10.0, top: 20.0),
-          child: Text(
-            "TOP RATED MOVIES",
-            style: TextStyle(
-                color: Style.Colors.titleColor,
-                fontWeight: FontWeight.w500,
-                fontSize: 12.0),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, top: 20.0),
+              child: Text(
+                "TOP RATED MOVIES",
+                style: TextStyle(
+                    color: Style.Colors.titleColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12.0),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return TopRatedMoviesListScreen();
+                }));
+              },
+              child: Padding(
+                padding: EdgeInsets.only(right: 10.0, top: 20.0),
+                child: Text(
+                  "SEE MORE >",
+                  style: TextStyle(
+                      color: Style.Colors.titleColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.0),
+                ),
+              ),
+            ),
+          ],
         ),
         SizedBox(
           height: 5.0,

@@ -5,15 +5,24 @@
 import 'package:movie_app/model/movie.dart';
 
 class MovieResponse {
-  final List<Movie> movies;
-  final String error;
+  List<Movie> movies;
+  int page;
+  int totalPages;
+  String error;
 
-  MovieResponse(this.movies, this.error);
-  MovieResponse.fromJson(Map<String, dynamic> json)
-      : movies = (json["results"] as List)
-            .map((i) => new Movie.fromJson(i))
-            .toList(),
-        error = "";
+  MovieResponse(this.page, this.totalPages, this.movies, this.error);
+
+  MovieResponse.fromJson(Map<String, dynamic> json) {
+    page = json['page'];
+    totalPages = json['total_pages'];
+    error = "";
+    if (json['results'] != null) {
+      movies = new List<Movie>();
+      json['results'].forEach((v) {
+        movies.add(new Movie.fromJson(v));
+      });
+    }
+  }
 
   MovieResponse.withError(String errorValue)
       : movies = List(),
