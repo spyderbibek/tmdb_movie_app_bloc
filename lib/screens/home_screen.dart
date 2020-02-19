@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:movie_app/style/theme.dart' as Style;
 import 'package:movie_app/widgets/genres.dart';
+import 'package:movie_app/widgets/home_app_bar.dart';
 import 'package:movie_app/widgets/now_playing.dart';
 import 'package:movie_app/widgets/persons.dart';
 import 'package:movie_app/widgets/top_movies.dart';
@@ -16,6 +17,8 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
+enum MoviesType { NOWPLAYING, TOPRATED, UPCOMING }
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
@@ -38,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
-      body: SizedBox.expand(
+//      appBar: AppBar(
+//        backgroundColor: Style.Colors.mainColor,
+//        centerTitle: true,
+//        title: Text("TRENDING"),
+//      ),
+      body: SafeArea(
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
@@ -48,15 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: ListView(
                 children: <Widget>[
-                  AppBar(
-                    backgroundColor: Style.Colors.mainColor,
-                    centerTitle: true,
-                    title: Text("Home"),
-                  ),
+                  HomeAppBar(),
                   NowPlaying(),
-                  GenresScreen(),
+                  //GenresScreen()
+                  // ,
+                  MoviesList(
+                    type: MoviesType.TOPRATED,
+                  ),
                   PersonsList(),
-                  TopMovies(),
+                  MoviesList(
+                    type: MoviesType.UPCOMING,
+                  ),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -89,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showElevation: true,
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-              title: Text('Home'), icon: Icon(EvaIcons.homeOutline)),
+              title: Text('Trending'), icon: Icon(EvaIcons.homeOutline)),
           BottomNavyBarItem(
               title: Text('Discover'), icon: Icon(EvaIcons.mapOutline)),
           BottomNavyBarItem(

@@ -8,6 +8,8 @@ import 'package:movie_app/model/genre.dart';
 import 'package:movie_app/model/genre_response.dart';
 import 'package:movie_app/widgets/genres_list.dart';
 
+import 'loader.dart';
+
 class GenresScreen extends StatefulWidget {
   @override
   _GenresScreenState createState() => _GenresScreenState();
@@ -27,9 +29,6 @@ class _GenresScreenState extends State<GenresScreen> {
       stream: genresBloc.subject.stream,
       builder: (BuildContext context, AsyncSnapshot<GenreResponse> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-            return _buildErrorWidget(snapshot.data.error);
-          }
           return _buildGenreWidget(snapshot.data);
         } else if (snapshot.hasError) {
           return _buildErrorWidget(snapshot.error);
@@ -40,19 +39,30 @@ class _GenresScreenState extends State<GenresScreen> {
     );
   }
 
+//  Widget _buildLoadingWidget() {
+//    return Center(
+//      child: Column(
+//        mainAxisAlignment: MainAxisAlignment.center,
+//        children: <Widget>[
+//          SizedBox(
+//            height: 25.0,
+//            width: 25.0,
+//            child: CircularProgressIndicator(
+//              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+//              strokeWidth: 4.0,
+//            ),
+//          )
+//        ],
+//      ),
+//    );
+//  }
+
   Widget _buildLoadingWidget() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
+          Loader(),
         ],
       ),
     );

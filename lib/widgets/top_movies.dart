@@ -5,23 +5,41 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:movie_app/bloc/get_movies_bloc.dart';
+import 'package:movie_app/bloc/get_all_movies_bloc.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/screens/home_screen.dart';
 import 'package:movie_app/screens/top_rated_movies_all.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
-class TopMovies extends StatefulWidget {
+import 'loader.dart';
+
+class MoviesList extends StatefulWidget {
+  final MoviesType type;
+
+  MoviesList({@required this.type});
+
   @override
-  _TopMoviesState createState() => _TopMoviesState();
+  _MoviesListState createState() => _MoviesListState(movieType: type);
 }
 
-class _TopMoviesState extends State<TopMovies> {
+class _MoviesListState extends State<MoviesList> {
+  final MoviesType movieType;
+  Stream<List<Movie>> stream;
+
+  _MoviesListState({@required this.movieType});
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    moviesBloc..getMovies(1);
+    if (movieType == MoviesType.UPCOMING) {
+      moviesBloc..getUpcomingMovies(1);
+      stream = moviesBloc.subjectUpcoming.stream;
+    } else if (movieType == MoviesType.TOPRATED) {
+      moviesBloc..getPopularMovies(1);
+      stream = moviesBloc.subjectTopRated.stream;
+    }
   }
 
   @override
@@ -35,7 +53,7 @@ class _TopMoviesState extends State<TopMovies> {
             Padding(
               padding: EdgeInsets.only(left: 10.0, top: 20.0),
               child: Text(
-                "TOP RATED MOVIES",
+                "${movieType.toString().split('.').last} MOVIES",
                 style: TextStyle(
                     color: Style.Colors.titleColor,
                     fontWeight: FontWeight.w500,
@@ -46,7 +64,7 @@ class _TopMoviesState extends State<TopMovies> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                  return TopRatedMoviesListScreen();
+                  return AllMoviesListScreen(type: movieType);
                 }));
               },
               child: Padding(
@@ -65,15 +83,10 @@ class _TopMoviesState extends State<TopMovies> {
         SizedBox(
           height: 5.0,
         ),
-        StreamBuilder<MovieResponse>(
-          stream: moviesBloc.subject.stream,
-          builder:
-              (BuildContext context, AsyncSnapshot<MovieResponse> snapshot) {
+        StreamBuilder<List<Movie>>(
+          stream: stream,
+          builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return _buildErrorWidget(snapshot.data.error);
-              }
               return _buildMoviesWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -91,14 +104,7 @@ class _TopMoviesState extends State<TopMovies> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
+          Loader(),
         ],
       ),
     );
@@ -113,8 +119,8 @@ class _TopMoviesState extends State<TopMovies> {
     );
   }
 
-  Widget _buildMoviesWidget(MovieResponse data) {
-    List<Movie> movies = data.movies;
+  Widget _buildMoviesWidget(List<Movie> data) {
+    List<Movie> movies = data;
     if (movies.length == 0) {
       return Container(
         child: Text("No Movies"),

@@ -4,10 +4,9 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_app/bloc/get_now_playing_bloc.dart';
+import 'package:movie_app/bloc/get_all_movies_bloc.dart';
 import 'package:movie_app/model/movie.dart';
-import 'package:movie_app/model/movie_response.dart';
+import 'package:movie_app/widgets/loader.dart';
 import 'package:movie_app/widgets/video_player_bottom_sheet.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:movie_app/style/theme.dart' as Style;
@@ -21,18 +20,16 @@ class _NowPlayingState extends State<NowPlaying> {
   @override
   void initState() {
     super.initState();
-    nowPlayingMoviesBloc..getMovies();
+
+    moviesBloc..getPlayingMovies(1);
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MovieResponse>(
-      stream: nowPlayingMoviesBloc.subject.stream,
-      builder: (BuildContext context, AsyncSnapshot<MovieResponse> snapshot) {
+    return StreamBuilder<List<Movie>>(
+      stream: moviesBloc.subjectPlaying.stream,
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-            return _buildErrorWidget(snapshot.data.error);
-          }
           return _buildHomeWidget(snapshot.data);
         } else if (snapshot.hasError) {
           return _buildErrorWidget(snapshot.error);
@@ -48,14 +45,7 @@ class _NowPlayingState extends State<NowPlaying> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
+          Loader(),
         ],
       ),
     );
@@ -70,8 +60,8 @@ class _NowPlayingState extends State<NowPlaying> {
     );
   }
 
-  Widget _buildHomeWidget(MovieResponse data) {
-    List<Movie> movies = data.movies;
+  Widget _buildHomeWidget(List<Movie> data) {
+    List<Movie> movies = data;
     if (movies.length == 0) {
       return Container(
         width: MediaQuery.of(context).size.width,

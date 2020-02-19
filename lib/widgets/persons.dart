@@ -11,6 +11,8 @@ import 'package:movie_app/model/person.dart';
 import 'package:movie_app/model/personal_response.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
+import 'loader.dart';
+
 class PersonsList extends StatefulWidget {
   @override
   _PersonsListState createState() => _PersonsListState();
@@ -47,10 +49,6 @@ class _PersonsListState extends State<PersonsList> {
           builder:
               (BuildContext context, AsyncSnapshot<PersonResponse> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return _buildErrorWidget(snapshot.data.error);
-              }
               return _buildPersonWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
@@ -68,14 +66,7 @@ class _PersonsListState extends State<PersonsList> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
+          Loader(),
         ],
       ),
     );

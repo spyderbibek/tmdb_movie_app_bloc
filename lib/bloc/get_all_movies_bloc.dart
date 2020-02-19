@@ -1,14 +1,13 @@
-import 'package:movie_app/model/movie.dart';
 /**
  * Author: Bibek Shah
  * profile: https://github.com/spyderbibek
  */
-
+import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/repository/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MoviesListBloc {
+class MoviesBloc {
   List<Movie> _upcomingMovieData = <Movie>[];
   List<Movie> _nowPlayingMovieData = <Movie>[];
   List<Movie> _topRatedMovieData = <Movie>[];
@@ -20,33 +19,38 @@ class MoviesListBloc {
   final BehaviorSubject<List<Movie>> _subjectTopRated =
       BehaviorSubject<List<Movie>>();
 
-//  getPaginatedMovies(int page, MoviesType type) async {
-//    MovieResponse response;
+//  getMovies(int page, MoviesType type) async {
+//    MovieResponse _response;
 //    if (type == MoviesType.NOWPLAYING) {
-//      response = await _repository.getPlayingMovies(page);
+//
 //    } else if (type == MoviesType.UPCOMING) {
-//      response = await _repository.getUpcomingMovies(page);
-//    }  else if (type == MoviesType.TOPRATED) {
-//      response = await _repository.getPopularMovies(page);
+//      _response = await _repository.getUpcomingMovies(page);
+//      _movieData.addAll(_response.movies);
+//      _subject.sink.add(_movieData);
+//    } else if (type == MoviesType.LATEST) {
+//      _response = await _repository.getLatestMovies(page);
+//      _movieData.addAll(_response.movies);
+//      _subject.sink.add(_movieData);
+//    } else if (type == MoviesType.TOPRATED) {
+//      _response = await _repository.getPopularMovies(page);
+//      _movieData.addAll(_response.movies);
+//      _subject.sink.add(_movieData);
 //    }
-//    _movieData.addAll(response.movies);
-//    print("Total Movie:" + _movieData.length.toString());
-//    _subject.sink.add(_movieData);
 //  }
 
-  getPaginatedPlayingMovies(int page) async {
+  getPlayingMovies(int page) async {
     MovieResponse _response = await _repository.getPlayingMovies(page);
     _nowPlayingMovieData.addAll(_response.movies);
     _subjectNowPlaying.sink.add(_nowPlayingMovieData);
   }
 
-  getPaginatedUpcomingMovies(int page) async {
+  getUpcomingMovies(int page) async {
     MovieResponse _response = await _repository.getUpcomingMovies(page);
     _upcomingMovieData.addAll(_response.movies);
     _subjectUpcoming.sink.add(_upcomingMovieData);
   }
 
-  getPaginatedTopRatedMovies(int page) async {
+  getPopularMovies(int page) async {
     MovieResponse _response = await _repository.getTopRatedMovies(page);
     _topRatedMovieData.addAll(_response.movies);
     _subjectTopRated.sink.add(_topRatedMovieData);
@@ -66,4 +70,4 @@ class MoviesListBloc {
   BehaviorSubject<List<Movie>> get subjectTopRated => _subjectTopRated;
 }
 
-final moviesListBloc = MoviesListBloc();
+final moviesBloc = MoviesBloc();
