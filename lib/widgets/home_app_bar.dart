@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class HomeAppBar extends StatelessWidget {
+  final String title;
+  final String subTitle;
+
+  HomeAppBar({@required this.title, this.subTitle});
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -15,11 +20,11 @@ class HomeAppBar extends StatelessWidget {
       height: 60,
       // padding: EdgeInsets.only(left: 24, right: 24, top: 10),
       decoration: BoxDecoration(
-        color: Style.Colors.mainColor,
+        color: Style.CustomColors.mainColor,
         border: Border(
             bottom: BorderSide(
           width: 0.3,
-          color: Style.Colors.secondColor,
+          color: Style.CustomColors.secondColor,
         )),
       ),
       child: Row(
@@ -30,24 +35,26 @@ class HomeAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'TRENDING',
+                '$title',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
                   letterSpacing: 1.4,
-                  color: Style.Colors.secondColor,
+                  color: Style.CustomColors.secondColor,
                 ),
               ),
-              Text(
-                'Trending Movies',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  letterSpacing: 1.2,
-                  color: Colors.white,
-                ),
-              ),
+              subTitle != null
+                  ? Text(
+                      '$subTitle',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 1.2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Container(),
             ],
           ),
 //          GestureDetector(

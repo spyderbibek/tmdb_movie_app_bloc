@@ -60,38 +60,66 @@ class _HomeMoviesListState extends State<HomeMoviesList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 10.0, top: 20.0),
-              child: Text(
-                "${movieType.toString().split('.').last} MOVIES",
-                style: TextStyle(
-                    color: Style.Colors.titleColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12.0),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return AllMoviesList(type: movieType);
-                }));
-              },
-              child: Padding(
-                padding: EdgeInsets.only(right: 10.0, top: 20.0),
-                child: Text(
-                  "SEE MORE >",
-                  style: TextStyle(
-                      color: Style.Colors.titleColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: Style.CustomColors.secondColor,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    "${movieType.toString().split('.').last} MOVIES",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return AllMoviesList(type: movieType);
+                  }));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Style.CustomColors.secondColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      bottomLeft: Radius.circular(24),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    child: Text(
+                      'See All',
+                      style: TextStyle(
+                          color: Colors.black,
+                          letterSpacing: 1.2,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         SizedBox(
           height: 5.0,
@@ -152,8 +180,9 @@ class _HomeMoviesListState extends State<HomeMoviesList> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => MovieDetailsScreen(
+                          heroTag:
+                              "${movies[index].id}+${movieType.toString().split('.').last}",
                           movie: movies[index],
-                          heroId: "${movies[index].id}",
                         ),
                       ));
                 },
@@ -163,36 +192,45 @@ class _HomeMoviesListState extends State<HomeMoviesList> {
                   child: Column(
                     children: <Widget>[
                       movies[index].poster == null
-                          ? Container(
-                              width: 120.0,
-                              height: 180.0,
-                              decoration: BoxDecoration(
-                                  color: Style.Colors.secondColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2.0)),
-                                  shape: BoxShape.rectangle),
-                              child: Column(
-                                children: <Widget>[
-                                  Icon(
-                                    EvaIcons.filmOutline,
-                                    color: Colors.white,
-                                    size: 50.0,
-                                  )
-                                ],
+                          ? Hero(
+                              tag:
+                                  "${movies[index].id}+${movieType.toString().split('.').last}",
+                              child: Container(
+                                width: 120.0,
+                                height: 180.0,
+                                decoration: BoxDecoration(
+                                    color: Style.CustomColors.secondColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(2.0)),
+                                    shape: BoxShape.rectangle),
+                                child: Column(
+                                  children: <Widget>[
+                                    Icon(
+                                      EvaIcons.filmOutline,
+                                      color: Colors.white,
+                                      size: 50.0,
+                                    )
+                                  ],
+                                ),
                               ),
                             )
-                          : Container(
-                              width: 120.0,
-                              height: 180.0,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2.0)),
-                                  shape: BoxShape.rectangle,
-                                  image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
+                          : Hero(
+                              tag:
+                                  "${movies[index].id}+${movieType.toString().split('.').last}",
+                              child: Container(
+                                width: 120.0,
+                                height: 180.0,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(2.0)),
+                                    shape: BoxShape.rectangle,
+                                    image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
                                           "https://image.tmdb.org/t/p/w200/" +
-                                              movies[index].poster),
-                                      fit: BoxFit.cover)),
+                                              movies[index].poster,
+                                        ),
+                                        fit: BoxFit.cover)),
+                              ),
                             ),
                       SizedBox(
                         height: 10.0,
@@ -234,7 +272,7 @@ class _HomeMoviesListState extends State<HomeMoviesList> {
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                             itemBuilder: (context, _) => Icon(
                               EvaIcons.star,
-                              color: Style.Colors.secondColor,
+                              color: Style.CustomColors.secondColor,
                             ),
                             onRatingUpdate: (rating) {
                               print(rating);

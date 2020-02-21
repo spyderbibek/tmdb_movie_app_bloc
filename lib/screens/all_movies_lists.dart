@@ -21,8 +21,6 @@ class _AllMoviesListState extends State<AllMoviesList>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _controller;
 
-  IconData gridIcon = EvaIcons.listOutline;
-  bool gridView;
   @override
   void initState() {
     // TODO: implement initState
@@ -51,31 +49,12 @@ class _AllMoviesListState extends State<AllMoviesList>
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              backgroundColor: Style.Colors.mainColor,
+              backgroundColor: Style.CustomColors.mainColor,
               title: Text("Movies",
-                  style: TextStyle(color: Style.Colors.secondColor)),
+                  style: TextStyle(color: Style.CustomColors.secondColor)),
               pinned: false,
               floating: true,
               snap: false,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    gridIcon,
-                    color: Style.Colors.secondColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (gridIcon == EvaIcons.gridOutline) {
-                        gridIcon = EvaIcons.listOutline;
-                        gridView = false;
-                      } else {
-                        gridIcon = EvaIcons.gridOutline;
-                        gridView = true;
-                      }
-                    });
-                  },
-                )
-              ],
             ),
             SliverPersistentHeader(
               pinned: true,
@@ -86,7 +65,7 @@ class _AllMoviesListState extends State<AllMoviesList>
                   labelStyle:
                       TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   labelColor: Colors.red,
-                  unselectedLabelColor: Style.Colors.secondColor,
+                  unselectedLabelColor: Style.CustomColors.secondColor,
                   tabs: <Widget>[
                     Tab(
                       text: "Now Playing",
@@ -114,23 +93,18 @@ class _AllMoviesListState extends State<AllMoviesList>
                 children: <Widget>[
                   MoviesList(
                     type: MoviesType.NOWPLAYING,
-                    gridView: gridIcon == EvaIcons.gridOutline ? true : false,
                   ),
                   MoviesList(
                     type: MoviesType.TRENDING,
-                    gridView: gridIcon == EvaIcons.gridOutline ? true : false,
                   ),
                   MoviesList(
                     type: MoviesType.POPULAR,
-                    gridView: gridIcon == EvaIcons.gridOutline ? true : false,
                   ),
                   MoviesList(
                     type: MoviesType.UPCOMING,
-                    gridView: gridIcon == EvaIcons.gridOutline ? true : false,
                   ),
                   MoviesList(
                     type: MoviesType.TOPRATED,
-                    gridView: gridIcon == EvaIcons.gridOutline ? true : false,
                   ),
                 ],
                 controller: _controller,
@@ -161,7 +135,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
-      color: Style.Colors.mainColor, // ADD THE COLOR YOU WANT AS BACKGROUND.
+      color:
+          Style.CustomColors.mainColor, // ADD THE COLOR YOU WANT AS BACKGROUND.
       child: _tabBar,
     );
   }

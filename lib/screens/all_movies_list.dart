@@ -64,9 +64,9 @@ class _AllMoviesListScreenState extends State<AllMoviesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Style.Colors.mainColor,
+        backgroundColor: Style.CustomColors.mainColor,
         appBar: AppBar(
-          backgroundColor: Style.Colors.mainColor,
+          backgroundColor: Style.CustomColors.mainColor,
           centerTitle: true,
           title: Text("${movieType.toString().split('.').last} MOVIES"),
         ),
@@ -109,7 +109,7 @@ class _AllMoviesListScreenState extends State<AllMoviesListScreen> {
                   width: 100.0,
                   height: 160.0,
                   decoration: BoxDecoration(
-                      color: Style.Colors.secondColor,
+                      color: Style.CustomColors.secondColor,
                       borderRadius: BorderRadius.all(Radius.circular(2.0)),
                       shape: BoxShape.rectangle),
                   child: Column(
@@ -182,7 +182,7 @@ class _AllMoviesListScreenState extends State<AllMoviesListScreen> {
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                             itemBuilder: (context, _) => Icon(
                               EvaIcons.star,
-                              color: Style.Colors.secondColor,
+                              color: Style.CustomColors.secondColor,
                             ),
                             onRatingUpdate: (rating) {
                               print(rating);

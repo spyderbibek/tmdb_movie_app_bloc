@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movie_app/model/credit_response.dart';
 
 /**
  * Author: Bibek Shah
@@ -7,11 +8,13 @@ import 'package:dio/dio.dart';
 import 'package:movie_app/model/genre_response.dart';
 import 'package:movie_app/model/movie_response.dart';
 import 'package:movie_app/model/personal_response.dart';
+import 'package:movie_app/model/trailer_response.dart';
 import 'package:movie_app/model/video_response.dart';
 
 class MovieRepository {
   final String apiKey = "a0fda8414a6b4a0f3c552beeea551858";
   static String mainUrl = "https://api.themoviedb.org/3";
+  static String imageUrl = "https://image.tmdb.org/t/p/";
   final Dio _dio = Dio();
   var getPlayingUrl = '$mainUrl/movie/now_playing';
   var getTrendingUrl = "$mainUrl/trending/movie/week";
@@ -24,13 +27,12 @@ class MovieRepository {
   var getPersonsUrl = "$mainUrl/trending/person/week";
   var getMovieVideoUrl = "$mainUrl/movie/";
 
-  static String getMovieCreditsUrl(int id) {
-    return '$mainUrl' + '/movie/$id/credits';
+  static String getMovieCreditsUrl(int movieId) {
+    return '$mainUrl' + '/movie/$movieId/credits';
   }
 
-  static String movieDetailsUrl(int movieId) {
-    return '$mainUrl/movie/$movieId&append_to_response=credits,'
-        'images';
+  static String movieTrailerUrl(int movieId) {
+    return '$mainUrl/movie/$movieId/videos';
   }
 
 //  static String getMoviesForGenre(int genreId, int page) {
@@ -56,6 +58,30 @@ class MovieRepository {
     } catch (error, stackTrace) {
       print("Exception occured: $error stackTrace: $stackTrace");
       return MovieResponse.withError("$error");
+    }
+  }
+
+  Future<CreditResponse> getMovieCredits(int movieId) async {
+    var params = {"api_key": apiKey};
+    try {
+      Response response =
+          await _dio.get(getMovieCreditsUrl(movieId), queryParameters: params);
+      return CreditResponse.fromJsonMap(response.data);
+    } catch (error, stackTrace) {
+      print("Exception occured: $error stackTrace: $stackTrace");
+      return CreditResponse.withError("$error");
+    }
+  }
+
+  Future<TrailerResponse> getMovieTrailer(int movieId) async {
+    var params = {"api_key": apiKey};
+    try {
+      Response response =
+          await _dio.get(movieTrailerUrl(movieId), queryParameters: params);
+      return TrailerResponse.fromJson(response.data);
+    } catch (error, stackTrace) {
+      print("Exception occured: $error stackTrace: $stackTrace");
+      return TrailerResponse.withError("$error");
     }
   }
 

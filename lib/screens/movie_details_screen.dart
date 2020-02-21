@@ -7,31 +7,37 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_app/bloc/get_credit_bloc.dart';
 import 'package:movie_app/bloc/get_genre_bloc.dart';
+import 'package:movie_app/bloc/get_trailer_bloc.dart';
+import 'package:movie_app/model/credit_response.dart';
 import 'package:movie_app/model/genre.dart';
 import 'package:movie_app/model/genre_response.dart';
 import 'package:movie_app/model/movie.dart';
+import 'package:movie_app/model/trailer_response.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 import 'package:movie_app/widgets/genre_list.dart';
+import 'package:movie_app/widgets/loader.dart';
+import 'package:movie_app/widgets/youtube_player_screen.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final Movie movie;
-  final String heroId;
+  final String heroTag;
 
-  MovieDetailsScreen({@required this.movie, @required this.heroId});
+  MovieDetailsScreen({@required this.movie, @required this.heroTag});
 
   @override
   _MovieDetailsScreenState createState() => _MovieDetailsScreenState();
 }
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
-  List<Genre> _genres;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     genresBloc..getGenre();
+    creditBloc..getCredits(widget.movie.id);
+    trailerBloc..getTrailers(widget.movie.id);
   }
 
   @override
@@ -56,7 +62,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               widget.movie.backPoster,
                         ),
                         fit: BoxFit.cover,
-                        placeholder: AssetImage("assets/images/no_image.jpg"),
+                        placeholder: AssetImage("assets/images/loading.gif"),
                       ),
                 Container(
                   decoration: BoxDecoration(
@@ -65,10 +71,10 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                           begin: FractionalOffset.bottomCenter,
                           end: FractionalOffset.topCenter,
                           colors: [
-                            Style.Colors.mainColor,
-                            Style.Colors.mainColor.withOpacity(0.3),
-                            Style.Colors.mainColor.withOpacity(0.2),
-                            Style.Colors.mainColor.withOpacity(0.1),
+                            Style.CustomColors.mainColor,
+                            Style.CustomColors.mainColor.withOpacity(0.3),
+                            Style.CustomColors.mainColor.withOpacity(0.2),
+                            Style.CustomColors.mainColor.withOpacity(0.1),
                           ],
                           stops: [
                             0.0,
@@ -82,7 +88,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           ),
           Expanded(
             child: Container(
-              color: Style.Colors.mainColor,
+              color: Style.CustomColors.mainColor,
             ),
           )
         ],
@@ -95,7 +101,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Style.Colors.secondColor,
+                color: Style.CustomColors.secondColor,
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -117,7 +123,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
-                              color: Style.Colors.thirdColor,
+                              color: Style.CustomColors.thirdColor,
                               child: Column(
                                 children: <Widget>[
                                   Padding(
@@ -174,8 +180,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                                     itemBuilder: (context, _) =>
                                                         Icon(
                                                       EvaIcons.star,
-                                                      color: Style
-                                                          .Colors.secondColor,
+                                                      color: Style.CustomColors
+                                                          .secondColor,
                                                     ),
                                                     onRatingUpdate: (rating) {
                                                       print(rating);
@@ -205,11 +211,10 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                                       snapshot.data.genres,
                                                 );
                                               } else {
-                                                return CircularProgressIndicator();
+                                                return Loader();
                                               }
                                             },
                                           ),
-
                                           Row(
                                             children: <Widget>[
                                               Padding(
@@ -255,16 +260,242 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                               ),
                                             ],
                                           ),
-//                                          ScrollingArtists(
-//                                            api: Endpoints.getCreditsUrl(
-//                                                widget.movie.id),
-//                                            title: 'Cast',
-//                                            tapButtonText: 'See full cast & crew',
-//                                            themeData: widget.themeData,
-//                                            onTap: (Cast cast) {
-//                                              modalBottomSheetMenu(cast);
-//                                            },
-//                                          ),
+                                          StreamBuilder<CreditResponse>(
+                                            stream: creditBloc.subject.stream,
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<CreditResponse>
+                                                    snapshot) {
+                                              if (snapshot.hasData) {
+                                                return Column(
+                                                  children: <Widget>[
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Text("Cast",
+                                                              style: Style
+                                                                  .TextTheme
+                                                                  .body2),
+                                                        ),
+                                                        FlatButton(
+                                                          onPressed: () {
+//                                                            Navigator.push(
+//                                                                context,
+//                                                                MaterialPageRoute(
+//                                                                    builder: (context) => CastAndCrew(
+//                                                                      themeData: widget.themeData,
+//                                                                      credits: credits,
+//                                                                    )));
+                                                          },
+                                                          child: Text(
+                                                              "See full cast & crew",
+                                                              style: Style
+                                                                  .TextTheme
+                                                                  .caption),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      width: double.infinity,
+                                                      height: 140,
+                                                      child: ListView.builder(
+                                                        physics:
+                                                            BouncingScrollPhysics(),
+                                                        itemCount: snapshot
+                                                            .data.cast.length,
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {},
+                                                              child: SizedBox(
+                                                                width: 80,
+                                                                child: Column(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            70,
+                                                                        child:
+                                                                            ClipRRect(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          child: snapshot.data.cast[index].profile_path == null
+                                                                              ? Image.asset(
+                                                                                  'assets/images/no_image.jpg',
+                                                                                  fit: BoxFit.cover,
+                                                                                )
+                                                                              : FadeInImage(
+                                                                                  image: CachedNetworkImageProvider("https://image.tmdb.org/t/p/w500/" + snapshot.data.cast[index].profile_path),
+                                                                                  fit: BoxFit.cover,
+                                                                                  placeholder: AssetImage('assets/images/loading.gif'),
+                                                                                ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          Text(
+                                                                        snapshot
+                                                                            .data
+                                                                            .cast[index]
+                                                                            .name,
+                                                                        style: Style
+                                                                            .TextTheme
+                                                                            .caption,
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              } else {
+                                                return Loader();
+                                              }
+                                            },
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: Text(
+                                                  'Trailers',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Sans',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 16),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          StreamBuilder<TrailerResponse>(
+                                            stream: trailerBloc.subject.stream,
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<TrailerResponse>
+                                                    snapshot) {
+                                              if (snapshot.hasData) {
+                                                return SizedBox(
+                                                  width: double.infinity,
+                                                  height: 150,
+                                                  child: ListView.builder(
+                                                    physics:
+                                                        BouncingScrollPhysics(),
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount: snapshot
+                                                        .data.results.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return snapshot
+                                                                  .data
+                                                                  .results[
+                                                                      index]
+                                                                  .site ==
+                                                              "YouTube"
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return YoutubePlayerScreen(
+                                                                      videoId: snapshot
+                                                                          .data
+                                                                          .results[
+                                                                              index]
+                                                                          .key,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              },
+                                                              child: Stack(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                        10.0,
+                                                                        8.0,
+                                                                        8.0,
+                                                                        8.0),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
+                                                                      child:
+                                                                          FadeInImage(
+                                                                        image: CachedNetworkImageProvider(
+                                                                            'https://i3.ytimg.com/vi_webp/${snapshot.data.results[index].key}/mqdefault.webp'),
+                                                                        placeholder:
+                                                                            AssetImage("assets/images/loading.gif"),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Positioned(
+                                                                    left: 0,
+                                                                    top: 0,
+                                                                    bottom: 0,
+                                                                    right: 0,
+                                                                    child: Icon(
+                                                                      EvaIcons
+                                                                          .playCircleOutline,
+                                                                      size: 55,
+                                                                      color: Style
+                                                                          .CustomColors
+                                                                          .secondColor,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : Container();
+                                                    },
+                                                  ),
+                                                );
+                                              } else if (snapshot.hasError) {
+                                                return Center(
+                                                  child:
+                                                      Text("${snapshot.error}"),
+                                                );
+                                              } else {
+                                                return Loader();
+                                              }
+                                            },
+                                          )
                                         ],
                                       ),
                                     ),
@@ -277,7 +508,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         top: 0,
                         left: 40,
                         child: Hero(
-                          tag: widget.heroId,
+                          tag: widget.heroTag,
                           child: SizedBox(
                             width: 100,
                             height: 150,
@@ -289,12 +520,12 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                       fit: BoxFit.cover,
                                     )
                                   : FadeInImage(
-                                      image: NetworkImage(
+                                      image: CachedNetworkImageProvider(
                                           'https://image.tmdb.org/t/p/w500/' +
                                               widget.movie.poster),
                                       fit: BoxFit.cover,
                                       placeholder: AssetImage(
-                                          'assets/images/no_image.jpg'),
+                                          'assets/images/loading.gif'),
                                     ),
                             ),
                           ),

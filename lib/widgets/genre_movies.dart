@@ -100,7 +100,7 @@ class _GenreMoviesState extends State<GenreMovies> {
                             width: 120.0,
                             height: 180.0,
                             decoration: BoxDecoration(
-                                color: Style.Colors.secondColor,
+                                color: Style.CustomColors.secondColor,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(2.0)),
                                 shape: BoxShape.rectangle),
@@ -168,7 +168,7 @@ class _GenreMoviesState extends State<GenreMovies> {
                           itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                           itemBuilder: (context, _) => Icon(
                             EvaIcons.star,
-                            color: Style.Colors.secondColor,
+                            color: Style.CustomColors.secondColor,
                           ),
                           onRatingUpdate: (rating) {
                             print(rating);

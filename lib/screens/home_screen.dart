@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Style.Colors.mainColor,
+      backgroundColor: Style.CustomColors.mainColor,
       body: SafeArea(
         child: PageView(
           controller: _pageController,
@@ -50,7 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: ListView(
                 children: <Widget>[
-                  HomeAppBar(),
+                  HomeAppBar(
+                    title: "TRENDING",
+                    subTitle: "Trending Movies",
+                  ),
                   NowPlaying(),
                   //GenresScreen()
                   // ,
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       "MADE BY BKSAPPS",
                       style: TextStyle(
-                          color: Style.Colors.titleColor,
+                          color: Style.CustomColors.titleColor,
                           fontSize: 9.0,
                           fontWeight: FontWeight.w500),
                     ),
@@ -89,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavyBar(
-        backgroundColor: Style.Colors.mainColor,
+        backgroundColor: Style.CustomColors.mainColor,
         showElevation: true,
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(

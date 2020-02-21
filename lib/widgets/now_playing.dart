@@ -78,8 +78,8 @@ class _NowPlayingState extends State<NowPlaying> {
             align: IndicatorAlign.bottom,
             indicatorSpace: 8.0,
             padding: EdgeInsets.all(5.0),
-            indicatorColor: Style.Colors.titleColor,
-            indicatorSelectorColor: Style.Colors.secondColor,
+            indicatorColor: Style.CustomColors.titleColor,
+            indicatorSelectorColor: Style.CustomColors.secondColor,
             shape: IndicatorShape.circle(size: 5.0),
             child: PageView.builder(
                 scrollDirection: Axis.horizontal,

@@ -36,7 +36,7 @@ class _PersonsListState extends State<PersonsList> {
           child: Text(
             "TRENDING PERSONS ON THIS WEEK",
             style: TextStyle(
-                color: Style.Colors.titleColor,
+                color: Style.CustomColors.titleColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 12.0),
           ),
@@ -102,7 +102,7 @@ class _PersonsListState extends State<PersonsList> {
                           height: 70.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Style.Colors.secondColor,
+                            color: Style.CustomColors.secondColor,
                           ),
                           child: Icon(
                             FontAwesomeIcons.userAlt,
@@ -138,7 +138,7 @@ class _PersonsListState extends State<PersonsList> {
                   Text(
                     "Trending for ${persons[index].known}",
                     style: TextStyle(
-                      color: Style.Colors.titleColor,
+                      color: Style.CustomColors.titleColor,
                       fontWeight: FontWeight.w400,
                       fontSize: 7.0,
                     ),

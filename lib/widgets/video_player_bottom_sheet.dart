@@ -148,8 +148,8 @@ class _VideoPlayerBottomSheetState extends State<VideoPlayerBottomSheet> {
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     colors: [
-                      Style.Colors.mainColor.withOpacity(1.0),
-                      Style.Colors.mainColor.withOpacity(0.0)
+                      Style.CustomColors.mainColor.withOpacity(1.0),
+                      Style.CustomColors.mainColor.withOpacity(0.0)
                     ],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
@@ -162,7 +162,7 @@ class _VideoPlayerBottomSheetState extends State<VideoPlayerBottomSheet> {
             left: 0,
             child: Icon(
               FontAwesomeIcons.playCircle,
-              color: Style.Colors.secondColor,
+              color: Style.CustomColors.secondColor,
               size: 40.0,
             ),
           ),
