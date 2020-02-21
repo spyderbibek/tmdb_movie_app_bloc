@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 /**
  * Author: Bibek Shah
  * profile: https://github.com/spyderbibek
@@ -139,8 +140,9 @@ class _VideoPlayerBottomSheetState extends State<VideoPlayerBottomSheet> {
                   shape: BoxShape.rectangle,
                   image: new DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage("https://image.tmdb.org/t/p/original/" +
-                        movieData.backPoster),
+                    image: CachedNetworkImageProvider(
+                        "https://image.tmdb.org/t/p/original/" +
+                            movieData.backPoster),
                   ))),
           Container(
             decoration: BoxDecoration(

@@ -5,9 +5,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_app/bloc/get_all_movies_bloc.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/screens/home_screen.dart';
-import 'package:movie_app/bloc/get_movies_bloc.dart';
 import 'package:movie_app/style/theme.dart' as Style;
 
 class AllMoviesListScreen extends StatefulWidget {
@@ -33,11 +33,11 @@ class _AllMoviesListScreenState extends State<AllMoviesListScreen> {
     // TODO: implement initState
     super.initState();
     if (movieType == MoviesType.UPCOMING) {
-      moviesListBloc..getPaginatedUpcomingMovies(currentPage);
-      stream = moviesListBloc.subjectUpcoming.stream;
+      moviesBloc..getUpcomingMovies(currentPage);
+      stream = moviesBloc.subjectUpcoming.stream;
     } else if (movieType == MoviesType.TOPRATED) {
-      moviesListBloc..getPaginatedTopRatedMovies(currentPage);
-      stream = moviesListBloc.subjectTopRated.stream;
+      moviesBloc..getTopRatedMovies(currentPage);
+      stream = moviesBloc.subjectTopRated.stream;
     }
 
     _controller = ScrollController()..addListener(_scrollListener);
@@ -54,9 +54,9 @@ class _AllMoviesListScreenState extends State<AllMoviesListScreen> {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       currentPage = currentPage + 1;
       if (movieType == MoviesType.UPCOMING) {
-        moviesListBloc..getPaginatedUpcomingMovies(currentPage);
+        moviesBloc..getUpcomingMovies(currentPage);
       } else if (movieType == MoviesType.TOPRATED) {
-        moviesListBloc..getPaginatedTopRatedMovies(currentPage);
+        moviesBloc..getTopRatedMovies(currentPage);
       }
     }
   }

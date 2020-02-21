@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/all_movies_lists.dart';
 import 'package:movie_app/screens/home_screen.dart';
 
 void main() => runApp(MyApp());

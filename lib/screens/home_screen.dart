@@ -7,7 +7,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:movie_app/style/theme.dart' as Style;
-import 'package:movie_app/widgets/genres.dart';
 import 'package:movie_app/widgets/home_app_bar.dart';
 import 'package:movie_app/widgets/now_playing.dart';
 import 'package:movie_app/widgets/persons.dart';
@@ -18,7 +17,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-enum MoviesType { NOWPLAYING, TOPRATED, UPCOMING }
+enum MoviesType { NOWPLAYING, TOPRATED, UPCOMING, TRENDING, POPULAR }
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
@@ -41,11 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Style.Colors.mainColor,
-//      appBar: AppBar(
-//        backgroundColor: Style.Colors.mainColor,
-//        centerTitle: true,
-//        title: Text("TRENDING"),
-//      ),
       body: SafeArea(
         child: PageView(
           controller: _pageController,
@@ -60,11 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   NowPlaying(),
                   //GenresScreen()
                   // ,
-                  MoviesList(
-                    type: MoviesType.TOPRATED,
+                  HomeMoviesList(
+                    type: MoviesType.NOWPLAYING,
                   ),
                   PersonsList(),
-                  MoviesList(
+                  HomeMoviesList(
                     type: MoviesType.UPCOMING,
                   ),
                   SizedBox(

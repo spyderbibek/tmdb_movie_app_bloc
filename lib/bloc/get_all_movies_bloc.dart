@@ -11,6 +11,8 @@ class MoviesBloc {
   List<Movie> _upcomingMovieData = <Movie>[];
   List<Movie> _nowPlayingMovieData = <Movie>[];
   List<Movie> _topRatedMovieData = <Movie>[];
+  List<Movie> _trendingMovieData = <Movie>[];
+  List<Movie> _popularMovieData = <Movie>[];
   final MovieRepository _repository = MovieRepository();
   final BehaviorSubject<List<Movie>> _subjectUpcoming =
       BehaviorSubject<List<Movie>>();
@@ -18,25 +20,10 @@ class MoviesBloc {
       BehaviorSubject<List<Movie>>();
   final BehaviorSubject<List<Movie>> _subjectTopRated =
       BehaviorSubject<List<Movie>>();
-
-//  getMovies(int page, MoviesType type) async {
-//    MovieResponse _response;
-//    if (type == MoviesType.NOWPLAYING) {
-//
-//    } else if (type == MoviesType.UPCOMING) {
-//      _response = await _repository.getUpcomingMovies(page);
-//      _movieData.addAll(_response.movies);
-//      _subject.sink.add(_movieData);
-//    } else if (type == MoviesType.LATEST) {
-//      _response = await _repository.getLatestMovies(page);
-//      _movieData.addAll(_response.movies);
-//      _subject.sink.add(_movieData);
-//    } else if (type == MoviesType.TOPRATED) {
-//      _response = await _repository.getPopularMovies(page);
-//      _movieData.addAll(_response.movies);
-//      _subject.sink.add(_movieData);
-//    }
-//  }
+  final BehaviorSubject<List<Movie>> _subjectTrending =
+      BehaviorSubject<List<Movie>>();
+  final BehaviorSubject<List<Movie>> _subjectPopular =
+      BehaviorSubject<List<Movie>>();
 
   getPlayingMovies(int page) async {
     MovieResponse _response = await _repository.getPlayingMovies(page);
@@ -50,24 +37,42 @@ class MoviesBloc {
     _subjectUpcoming.sink.add(_upcomingMovieData);
   }
 
-  getPopularMovies(int page) async {
+  getTopRatedMovies(int page) async {
     MovieResponse _response = await _repository.getTopRatedMovies(page);
     _topRatedMovieData.addAll(_response.movies);
     _subjectTopRated.sink.add(_topRatedMovieData);
+  }
+
+  getTrendingMovie(int page) async {
+    MovieResponse _response = await _repository.getTrendingMovies(page);
+    _trendingMovieData.addAll(_response.movies);
+    _subjectTrending.sink.add(_trendingMovieData);
+  }
+
+  getPopularMovies(int page) async {
+    MovieResponse _response = await _repository.getPopularMovies(page);
+    _popularMovieData.addAll(_response.movies);
+    _subjectPopular.sink.add(_popularMovieData);
   }
 
   dispose() {
     _subjectTopRated.close();
     _subjectUpcoming.close();
     _subjectNowPlaying.close();
+    _subjectTrending.close();
+    _subjectPopular.close();
     _topRatedMovieData.clear();
     _upcomingMovieData.clear();
     _nowPlayingMovieData.clear();
+    _popularMovieData.clear();
+    _trendingMovieData.clear();
   }
 
   BehaviorSubject<List<Movie>> get subjectUpcoming => _subjectUpcoming;
   BehaviorSubject<List<Movie>> get subjectPlaying => _subjectNowPlaying;
   BehaviorSubject<List<Movie>> get subjectTopRated => _subjectTopRated;
+  BehaviorSubject<List<Movie>> get subjectTrending => _subjectTrending;
+  BehaviorSubject<List<Movie>> get subjectPopular => _subjectPopular;
 }
 
 final moviesBloc = MoviesBloc();
