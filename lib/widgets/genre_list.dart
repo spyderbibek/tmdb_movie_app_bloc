@@ -4,11 +4,14 @@
  */
 import 'package:flutter/material.dart';
 import 'package:movie_app/model/genre.dart';
+import 'package:movie_app/widgets/genre_movies.dart';
+import 'package:movie_app/style/theme.dart' as Style;
 
 class GenreList extends StatefulWidget {
   final ThemeData themeData;
   final List<int> genres;
   final List<Genre> totalGenres;
+
   GenreList({this.themeData, this.genres, this.totalGenres});
 
   @override
@@ -17,6 +20,7 @@ class GenreList extends StatefulWidget {
 
 class _GenreListState extends State<GenreList> {
   List<Genre> _genres = new List();
+
   @override
   void initState() {
     super.initState();
@@ -48,21 +52,20 @@ class _GenreListState extends State<GenreList> {
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: InkWell(
                         onTap: () {
-//                    Navigator.push(
-//                        context,
-//                        MaterialPageRoute(
-//                            builder: (context) => GenreMovies(
-//                              themeData: widget.themeData,
-//                              genre: _genres[index],
-//                              genres: widget.totalGenres,
-//                            )));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GenreMovies(
+                                    genreId: _genres[index].id,
+                                    genreName: _genres[index].name),
+                              ));
                         },
                         child: Chip(
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
                                 width: 1,
                                 style: BorderStyle.solid,
-                                color: widget.themeData.accentColor),
+                                color: Style.CustomColors.secondColor),
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                           label: Text(

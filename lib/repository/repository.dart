@@ -187,11 +187,11 @@ class MovieRepository {
     }
   }
 
-  Future<MovieResponse> getMoviesByGenre(int id) async {
+  Future<MovieResponse> getMoviesByGenre(int id, int page) async {
     var params = {
       "api_key": apiKey,
       "language": "en_US",
-      "page": 1,
+      "page": page,
       "with_genres": id
     };
     try {

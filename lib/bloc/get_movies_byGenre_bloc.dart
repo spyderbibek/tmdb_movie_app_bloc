@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:movie_app/model/movie.dart';
 /**
  * Author: Bibek Shah
  * profile: https://github.com/spyderbibek
@@ -9,13 +10,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:movie_app/model/movie_response.dart';
 
 class MoviesListByGenreBloc {
+  List<Movie> _movieData = <Movie>[];
   final MovieRepository _repository = MovieRepository();
-  final BehaviorSubject<MovieResponse> _subject =
-      BehaviorSubject<MovieResponse>();
+  final BehaviorSubject<List<Movie>> _subject = BehaviorSubject<List<Movie>>();
 
-  getMoviesByGenre(int id) async {
-    MovieResponse response = await _repository.getMoviesByGenre(id);
-    _subject.sink.add(response);
+  getMoviesByGenre(int id, int page) async {
+    if (page == 1) _movieData.clear();
+    MovieResponse response = await _repository.getMoviesByGenre(id, page);
+    _movieData.addAll(response.movies);
+    _subject.sink.add(_movieData);
   }
 
   void drainStream() {
@@ -28,7 +31,7 @@ class MoviesListByGenreBloc {
     _subject.close();
   }
 
-  BehaviorSubject<MovieResponse> get subject => _subject;
+  BehaviorSubject<List<Movie>> get subject => _subject;
 }
 
 final moviesByGenreBloc = MoviesListByGenreBloc();

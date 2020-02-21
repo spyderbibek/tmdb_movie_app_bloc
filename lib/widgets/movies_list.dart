@@ -171,17 +171,14 @@ class _MoviesListState extends State<MoviesList> {
                 : Hero(
                     tag:
                         "${movieData.id}+${movieType.toString().split('.').last}",
-                    child: Container(
-                      width: 170.0,
-                      height: 220.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(2.0)),
-                          shape: BoxShape.rectangle,
-                          image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  "https://image.tmdb.org/t/p/w200/" +
-                                      movieData.poster),
-                              fit: BoxFit.cover)),
+                    child: FadeInImage(
+                      width: 170,
+                      height: 220,
+                      image: CachedNetworkImageProvider(
+                          "https://image.tmdb.org/t/p/w200/" +
+                              movieData.poster),
+                      fit: BoxFit.cover,
+                      placeholder: AssetImage("assets/images/loading.gif"),
                     ),
                   ),
             Column(

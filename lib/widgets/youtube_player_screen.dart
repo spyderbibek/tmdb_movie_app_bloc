@@ -9,8 +9,9 @@ import 'package:movie_app/style/theme.dart' as Style;
 
 class YoutubePlayerScreen extends StatefulWidget {
   final String videoId;
+  final String videoName;
 
-  YoutubePlayerScreen({@required this.videoId});
+  YoutubePlayerScreen({@required this.videoId, @required this.videoName});
 
   @override
   _YoutubePlayerScreenState createState() => _YoutubePlayerScreenState();
@@ -36,12 +37,21 @@ class _YoutubePlayerScreenState extends State<YoutubePlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Style.CustomColors.mainColor,
+      appBar: AppBar(
+        backgroundColor: Style.CustomColors.mainColor,
+        title: Text(
+          '${widget.videoName}',
+          maxLines: 2,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Style.CustomColors.secondColor,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            HomeAppBar(
-              title: "Youtube Player",
-            ),
             Center(
               child: YoutubePlayer(
                 controller: _controller,

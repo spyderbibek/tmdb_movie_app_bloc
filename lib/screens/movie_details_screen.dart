@@ -437,6 +437,11 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                                                           .results[
                                                                               index]
                                                                           .key,
+                                                                      videoName: snapshot
+                                                                          .data
+                                                                          .results[
+                                                                              index]
+                                                                          .name,
                                                                     );
                                                                   },
                                                                 ));
